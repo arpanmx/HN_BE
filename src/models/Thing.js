@@ -1,0 +1,1 @@
+// Add thing schema here
