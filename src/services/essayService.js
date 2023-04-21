@@ -42,27 +42,40 @@ function fetchEssayAndScores(userID, callback) {
   });
 }
 
-function updateRubric(userID, reviewer, score1, score2, score3, score4, callback) {
-  const query = 'EXEC dbo.UpdateRubricScoresAndReviewer @UserID, @Reviewer, @Score1, @Score2, @Score3, @Score4';
-  const params = [
-      { name: 'UserID', type: sql.Int, val: userID },
-      { name: 'Reviewer', type: sql.VarChar, val: reviewer },
-      { name: 'Score1', type: sql.Int, val: score1 },
-      { name: 'Score2', type: sql.Int, val: score2 },
-      { name: 'Score3', type: sql.Int, val: score3 },
-      { name: 'Score4', type: sql.Int, val: score4 }
-  ];
-  db.query(query, params, (err, result) => {
-      callback(err, result);
-      console.log("Mondal")
+function updateRubricScores(userId, reviewer, q1Score, q2Score, q3Score, q4Score, callback) {
+  const spName = 'UpdateRubricScores';
+  
+  db.connect((err, conn) => {
+    if (err) {
+      return callback("berr");
+    }
+
+    const pm = conn.procedureMgr();
+    pm.get(spName, (proc) => {
+      const params = {
+        UserID: userId,
+        Reviewer: reviewer,
+        Score1: q1Score,
+        Score2: q2Score,
+        Score3: q3Score,
+        Score4: q4Score
+      };
+
+      proc.call(params, (err, results) => {
+        console.log(err)
+        callback(err, results);
+      });
+    });
   });
 }
+
+
 
 
   module.exports = {
     executeEssayAppReg,
     getUserIDs,
     fetchEssayAndScores,
-    updateRubric
+    updateRubricScores
   };
   
