@@ -1,4 +1,11 @@
 const app = require('./app');
+
+console.log("I have reached")
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
+
 const db = require('./config/db');
 
 db.connect((err) => {
@@ -8,9 +15,4 @@ db.connect((err) => {
     } else {
         console.log('Connected to MSSQL server');
     }
-});
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
 });
